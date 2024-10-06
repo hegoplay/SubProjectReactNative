@@ -1,6 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
+import CustomButton from "../components/CustomButton";
 const SignIn = () => {
   const defaultSize = 150;
   const circleGap = 30;
@@ -57,8 +58,8 @@ const SignIn = () => {
       {/* cac phuong thuc dang nhap */}
 
       <View>
-        <Text>fasdfas</Text>
-        <Text>afdasfas</Text>
+        <CustomButton btnColor="black" color="white" iconName="logo-apple">Create with Apple</CustomButton>
+        <Text></Text>
       </View>
     </View>
   );
