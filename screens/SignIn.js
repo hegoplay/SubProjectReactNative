@@ -2,7 +2,15 @@ import { StyleSheet, Text, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import CustomButton from "../components/CustomButton";
-const SignIn = () => {
+
+
+
+const SignIn = ({navigation}) => {
+
+  const goToFunctions = () =>{
+    navigation.navigate("TabScreen");
+  }
+
   const defaultSize = 150;
   const circleGap = 30;
   return (
@@ -56,32 +64,42 @@ const SignIn = () => {
         </Text>
       </View>
       {/* cac phuong thuc dang nhap */}
-
-      <View>
-        <CustomButton btnColor="black" color="white" iconName="logo-apple">Create with Apple</CustomButton>
-        <Text></Text>
+      
+      <View style = {styles.footer}>
+        <CustomButton btnColor="black" color="white" iconName="logo-apple" onPress={goToFunctions}>Continue with Apple</CustomButton>
+        <CustomButton btnColor= {Colors.blue300} color="white" iconName="logo-facebook" onPress={goToFunctions}>Continue with Facebook</CustomButton>
+        <CustomButton btnColor= {Colors.cyan300} color="white" iconName="phone-portrait-outline" onPress={goToFunctions}>Use phone number</CustomButton>
+        <View style = {{marginTop:24, gap: 5, flexDirection:"column"}}>
+          <Text style = {styles.label}>By signing up you agree to our Terms and Conditions</Text>
+          <Text style = {styles.label}>See how we use your data in our Privacy Policy</Text>
+        </View>
       </View>
     </View>
   );
 };
 
-export { SignIn };
+export default SignIn;
 
 const styles = StyleSheet.create({
   outerContainer: {
     flexDirection: "column",
-    alignItems: "center",
     justifyContent: "space-between",
     backgroundColor: "white",
     flex: 1,
+    padding: 24,
   },
   title: {
     fontSize: 32,
     fontWeight: "bold",
   },
   label: {
-    fontSize: 16,
+    fontSize: 12,
     fontWeight: "light",
-    color: Colors.gray300,
+    color: "gray",
+    textAlign:"center",
   },
+  footer:{
+    flexDirection: "column",
+    gap: 12,
+  }
 });
