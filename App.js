@@ -1,19 +1,45 @@
 import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
+import {
+  EditProfile,
+  GettingStarted,
+  SignIn,
+  SubScriptionPlan,
+} from "./screens";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { EditProfile, GettingStarted, SignIn } from "./screens";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createDrawerNavigator } from "@react-navigation/drawer";
 import Colors from "./constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
-
   const Tab = createBottomTabNavigator();
+  const ProfileDrawer = createDrawerNavigator();
+
+  const profileDrawers = () => {
+    return (
+      <ProfileDrawer.Navigator initialRouteName="EditProfile">
+        <ProfileDrawer.Screen
+          name="SubScriptionPlan"
+          component={SubScriptionPlan}
+          options={{ headerShadowVisible: false, headerTitle: "" }}
+        />
+        <ProfileDrawer.Screen
+          name="EditProfile"
+          component={EditProfile}
+          options={{
+            headerTitleAlign: "center",
+            headerTitle: "Edit Profile",
+          }}
+        />
+      </ProfileDrawer.Navigator>
+    );
+  };
 
   const functionTabs = () => (
     <Tab.Navigator
-      initialRouteName="GettingStarted"
+      initialRouteName="EditProfile"
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
         tabBarIcon: ({ focused, color, size }) => {
@@ -35,7 +61,7 @@ export default function App() {
         headerShown: false,
       })}
     >
-      <Tab.Screen name="EditProfile" component={EditProfile} />
+      <Tab.Screen name="EditProfile" component={profileDrawers} />
       <Tab.Screen name="GettingStarted" component={GettingStarted} />
       <Tab.Screen name="Bookmark" component={EditProfile} />
       <Tab.Screen name="Message" component={EditProfile} />
