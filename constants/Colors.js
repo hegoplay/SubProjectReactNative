@@ -5,6 +5,7 @@ const Colors = {
     gray300: "#999",
     cyan100: "#C8F9FF",
     cyan300: "#57BFD7",
+    cyan400: "#00BDD6",
     cyan500: "#36929F",
     blue300: "#379AE7",
     blue100: "#E7F1FA"

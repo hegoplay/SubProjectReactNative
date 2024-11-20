@@ -2,6 +2,7 @@ import { StatusBar } from "expo-status-bar";
 import { NavigationContainer } from "@react-navigation/native";
 import {
   EditProfile,
+  FilterScreen,
   GettingStarted,
   SignIn,
   SubScriptionPlan,
@@ -11,11 +12,14 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import Colors from "./constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
+import { FilterContext, FilterProvider } from "./utils/stores/FilterContext";
+import FindYourLoveScreen from "./screens/FindYourLoveScreen.jsx";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
   const Tab = createBottomTabNavigator();
   const ProfileDrawer = createDrawerNavigator();
+  const LoveDrawer = createDrawerNavigator();
 
   const profileDrawers = () => {
     return (
@@ -37,9 +41,28 @@ export default function App() {
     );
   };
 
+  const loveDrawers = () => {
+    return (
+      <FilterProvider>
+        <LoveDrawer.Navigator initialRouteName="FindYourLoveScreen">
+          <LoveDrawer.Screen
+            name="FilterScreen"
+            options={{ title: "Filters" , headerTitleAlign: "center"}}
+            component={FilterScreen}
+          />
+          <LoveDrawer.Screen
+            name="FindYourLoveScreen"
+            options={{ title: "FindYourLove" , headerTitleAlign: "center"}}
+            component={FindYourLoveScreen}
+          />
+        </LoveDrawer.Navigator>
+      </FilterProvider>
+    );
+  };
+
   const functionTabs = () => (
     <Tab.Navigator
-      initialRouteName="EditProfile"
+      initialRouteName="GettingStarted"
       screenOptions={({ route }) => ({
         tabBarShowLabel: false,
         tabBarIcon: ({ focused, color, size }) => {
@@ -62,7 +85,7 @@ export default function App() {
       })}
     >
       <Tab.Screen name="EditProfile" component={profileDrawers} />
-      <Tab.Screen name="GettingStarted" component={GettingStarted} />
+      <Tab.Screen name="GettingStarted" component={loveDrawers} />
       <Tab.Screen name="Bookmark" component={EditProfile} />
       <Tab.Screen name="Message" component={EditProfile} />
     </Tab.Navigator>
