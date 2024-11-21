@@ -1,10 +1,10 @@
 export const users = [
     {
         id: 1,
-        name: "Luciana Julia",
-        location: "Portland illinois",
+        name: "Ava Jones",
+        location: "Business Analyst at Tech",
         distance: 11,
-        age: 23,
+        age: 25,
         image: require("../assets/user1.jpg")
     }, 
     {

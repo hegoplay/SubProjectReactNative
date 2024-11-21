@@ -14,6 +14,7 @@ import Colors from "./constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import { FilterContext, FilterProvider } from "./utils/stores/FilterContext";
 import FindYourLoveScreen from "./screens/FindYourLoveScreen.jsx";
+import { TouchableOpacity } from "react-native";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -47,12 +48,34 @@ export default function App() {
         <LoveDrawer.Navigator initialRouteName="FindYourLoveScreen">
           <LoveDrawer.Screen
             name="FilterScreen"
-            options={{ title: "Filters" , headerTitleAlign: "center"}}
+            options={{ title: "Filters", headerTitleAlign: "center" }}
             component={FilterScreen}
           />
           <LoveDrawer.Screen
             name="FindYourLoveScreen"
-            options={{ title: "FindYourLove" , headerTitleAlign: "center"}}
+            options={({ navigation }) => ({
+              title: "HeartSync",
+              headerTitleAlign: "center",
+              headerTitleStyle: {
+                fontWeight: "bold",
+              },
+              headerShadowVisible: false,
+              headerRight: () => (
+                <TouchableOpacity
+                  style={{
+                    padding: 12,
+                    backgroundColor: Colors.cyan100,
+                    marginRight: 24,
+                    borderRadius: 8,
+                  }}
+                  onPress={() => {
+                    navigation.navigate("FilterScreen");
+                  }}
+                >
+                  <Ionicons color={Colors.cyan500} name="settings" size={16} />
+                </TouchableOpacity>
+              ),
+            })}
             component={FindYourLoveScreen}
           />
         </LoveDrawer.Navigator>

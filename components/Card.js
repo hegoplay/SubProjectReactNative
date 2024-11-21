@@ -9,6 +9,8 @@ import {
 import React, { useCallback } from "react";
 import { LinearGradient } from "expo-linear-gradient";
 import Choice from "./Choice";
+import { Ionicons } from "@expo/vector-icons";
+import Colors from "../constants/Colors";
 
 const { width, height } = Dimensions.get("window");
 
@@ -58,8 +60,13 @@ const Card = ({
           <Text style={styles.name}>
             {name}, {age}
           </Text>
-          <Text style={styles.location}>Live in {location}</Text>
-          <Text style={styles.distance}>{distance} miles away</Text>
+          <View style={{flexDirection: "row", alignItems: "flex-start"}}>
+            <Text style={styles.howToCall}>she/her/hers</Text>
+          </View>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
+            <Ionicons name="folder-outline" color="white" size={16} />
+            <Text style={styles.location}>{location}</Text>
+          </View>
         </View>
       </LinearGradient>
       {isFirst && (
@@ -94,29 +101,36 @@ const styles = StyleSheet.create({
     top: 25,
     width: width * 0.9,
     height: height * 0.78,
+    padding: 3,
+    backgroundColor: "white",
+    borderRadius: 10,
+    elevation: 3,
+    shadowColor: "#333",
   },
   image: {
     width: "100%",
     height: "100%",
-    borderRadius: 20,
+    borderRadius: 10,
   },
   gradient: {
     position: "absolute",
-    bottom: 0,
-    width: "100%",
+    bottom: 3,
+    width: "98%",
     height: 200,
-    borderBottomRightRadius: 20,
-    borderBottomLeftRadius: 20,
+    borderBottomRightRadius: 10,
+    borderBottomLeftRadius: 10,
   },
   userContainer: {
     position: "absolute",
     bottom: 24,
     left: 24,
+    flexDirection: "column",
+    gap: 12,
   },
   name: {
-    fontSize: 30,
+    fontSize: 24,
     color: "white",
-    fontWeight: "400",
+    fontWeight: "bold",
   },
   location: {
     fontSize: 18,
@@ -137,6 +151,13 @@ const styles = StyleSheet.create({
   },
   nopeContainer: {
     left: 45,
+  },
+  howToCall: {
+    backgroundColor: Colors.purple100,
+    color: Colors.purple300,
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    borderRadius: 12
   },
 });
 
