@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { Dimensions, PanResponder, Text } from "react-native";
+import { Dimensions, Modal, PanResponder, Text } from "react-native";
 import {
   Animated,
   StyleSheet,
@@ -8,30 +8,31 @@ import {
 } from "react-native";
 import { users as usersArray } from "../utils/data";
 import Card from "../components/Card";
-import Footer from "../components/Footer";
 import { Ionicons } from "@expo/vector-icons";
+import SwipedModal from "../components/SwipedModal";
 
 const { width, height } = Dimensions.get("window");
 
-export default FindYourLoveScreen = () => {
+export default FindYourLoveScreen = ({ navigation }) => {
   // Use useRef for Animated.Value
   const [users, setUsers] = useState(usersArray ?? []);
   const [showIntroScreen, setShowIntroScreen] = useState(true);
+  const [openModal, setOpenModal] = useState(false);
+  const [prevUserId, setPrevUserId] = useState(1);
   // const [direction, setDirection] = useState(1);
 
   const visibleIntroScreen = useRef(new Animated.Value(1)).current;
   const swipe = useRef(new Animated.ValueXY()).current;
   const titlSign = useRef(new Animated.Value(1)).current;
-  
 
   const removeTopCard = (direction) => {
     setUsers((prevState) => prevState.slice(1));
     swipe.setValue({ x: 0, y: 0 });
     // console.log(direction)
-    if (direction > 0){
-
+    if (direction > 0) {
+      setOpenModal(true);
     }
-  }
+  };
 
   const removeIntro = () => {
     Animated.timing(visibleIntroScreen, { toValue: 0, duration: 500 }).start(
@@ -47,9 +48,22 @@ export default FindYourLoveScreen = () => {
       swipe.setValue({ x: dx, y: dy });
       titlSign.setValue(y0 > (height * 0.9) / 2 ? 1 : -1);
     },
-    onPanResponderRelease: (_, { dx, dy }) => {
+    onPanResponderRelease: (_, { dx, dy, vx, vy }) => {
       const direction = Math.sign(dx);
       const isActionActive = Math.abs(dx) > 100;
+      const isJustTouch =
+        Math.abs(dx) < 5 &&
+        Math.abs(dy) < 5 &&
+        Math.abs(vx) < 0.1 &&
+        Math.abs(vy) < 0.1;
+      if (isJustTouch) {
+        // console.log("User Id first: {}",users[0].id );
+        navigation.navigate("LoverDetail", {
+          userId: users[0].id,
+          isSelecting: true,
+        });
+        return;
+      }
       if (isActionActive) {
         // swipe the card off the screen
         Animated.timing(swipe, {
@@ -59,8 +73,10 @@ export default FindYourLoveScreen = () => {
             y: dy,
           },
           useNativeDriver: true,
-        }).start(() => removeTopCard(direction));
-
+        }).start(() => {
+          setPrevUserId(users[0].id)
+          removeTopCard(direction);
+        });
       } else {
         // return card to original position
         Animated.spring(swipe, {
@@ -82,17 +98,23 @@ export default FindYourLoveScreen = () => {
 
   return (
     <View style={styles.container}>
+      <SwipedModal
+        visible={openModal}
+        setVisible={setOpenModal}
+        userId={prevUserId}
+      />
       {users
-        .map(({ name, image, location, distance, age }, index) => {
+        .map(({ name, image, location, job, age, id }, index) => {
           const isFirst = index == 0;
           const dragHandlers = isFirst ? panResponder.panHandlers : {};
 
           return (
             <Card
+              id={id}
               key={name}
               name={name}
               location={location}
-              distance={distance}
+              job={job}
               age={age}
               image={image}
               isFirst={isFirst}
@@ -124,7 +146,7 @@ export default FindYourLoveScreen = () => {
                   can connect.
                 </Text>
               </View>
-              <View style={{ flex: 1 , alignItems: "flex-end"}}>
+              <View style={{ flex: 1, alignItems: "flex-end" }}>
                 <Ionicons name="chevron-forward" color="white" size={24} />
               </View>
             </View>
@@ -136,12 +158,12 @@ export default FindYourLoveScreen = () => {
                 flexDirection: "row",
               }}
             >
-              <View style= {{flex: 1}}>
-                <Ionicons name="chevron-back" color="white" size={24}/>
+              <View style={{ flex: 1 }}>
+                <Ionicons name="chevron-back" color="white" size={24} />
               </View>
-              <View style={{ flex: 3 }} >
+              <View style={{ flex: 3 }}>
                 <Text style={styles.title}>Swipe left to pass</Text>
-                <Text style = {styles.label}>
+                <Text style={styles.label}>
                   If the person is not your cup of tea simple pass it's that
                   easy!
                 </Text>
@@ -155,6 +177,15 @@ export default FindYourLoveScreen = () => {
 };
 
 const styles = StyleSheet.create({
+  modalCard: {
+    width: "80%",
+    padding: 20,
+    borderRadius: 4,
+    backgroundColor: "white",
+    flexDirection: "column",
+    gap: 12,
+    // alignItems: "center",
+  },
   container: {
     flex: 1,
     alignItems: "center",
@@ -186,5 +217,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "white",
     fontWeight: "light",
+  },
+  content: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,.5)",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

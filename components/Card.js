@@ -16,9 +16,8 @@ const { width, height } = Dimensions.get("window");
 
 const Card = ({
   name,
-  location,
+  job,
   age,
-  distance,
   image,
   isFirst,
   swipe,
@@ -47,51 +46,55 @@ const Card = ({
   });
 
   return (
-    <Animated.View
-      style={[styles.container, isFirst && animatedCardStyle]}
-      {...rest}
-    >
-      <Image source={image} style={styles.image} />
-      <LinearGradient
-        colors={["transparent", "rgba(0,0,0,.9)"]}
-        style={styles.gradient}
+    // <TouchableWithoutFeedback>
+      <Animated.View
+        style={[styles.container, isFirst && animatedCardStyle]}
+        {...rest}
       >
-        <View style={styles.userContainer}>
-          <Text style={styles.name}>
-            {name}, {age}
-          </Text>
-          <View style={{flexDirection: "row", alignItems: "flex-start"}}>
-            <Text style={styles.howToCall}>she/her/hers</Text>
+        <Image source={image} style={styles.image} />
+        <LinearGradient
+          colors={["transparent", "rgba(0,0,0,.9)"]}
+          style={styles.gradient}
+        >
+          <View style={styles.userContainer}>
+            <Text style={styles.name}>
+              {name}, {age}
+            </Text>
+            <View style={{ flexDirection: "row", alignItems: "flex-start" }}>
+              <Text style={styles.howToCall}>she/her/hers</Text>
+            </View>
+            <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 8 }}
+            >
+              <Ionicons name="folder-outline" color="white" size={16} />
+              <Text style={styles.job}>{job}</Text>
+            </View>
           </View>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 8 }}>
-            <Ionicons name="folder-outline" color="white" size={16} />
-            <Text style={styles.location}>{location}</Text>
-          </View>
-        </View>
-      </LinearGradient>
-      {isFirst && (
-        <>
-          <Animated.View
-            style={[
-              styles.choiceContainer,
-              styles.nopeContainer,
-              { opacity: nopeOpacity },
-            ]}
-          >
-            <Choice type="nope" />
-          </Animated.View>
-          <Animated.View
-            style={[
-              styles.choiceContainer,
-              styles.likeContainer,
-              { opacity: likeOpacity },
-            ]}
-          >
-            <Choice type="like" />
-          </Animated.View>
-        </>
-      )}
-    </Animated.View>
+        </LinearGradient>
+        {isFirst && (
+          <>
+            <Animated.View
+              style={[
+                styles.choiceContainer,
+                styles.nopeContainer,
+                { opacity: nopeOpacity },
+              ]}
+            >
+              <Choice type="nope" />
+            </Animated.View>
+            <Animated.View
+              style={[
+                styles.choiceContainer,
+                styles.likeContainer,
+                { opacity: likeOpacity },
+              ]}
+            >
+              <Choice type="like" />
+            </Animated.View>
+          </>
+        )}
+      </Animated.View>
+    // </TouchableWithoutFeedback>
   );
 };
 
@@ -132,12 +135,12 @@ const styles = StyleSheet.create({
     color: "white",
     fontWeight: "bold",
   },
-  location: {
+  job: {
     fontSize: 18,
     color: "white",
     fontWeight: "300",
   },
-  distance: {
+  job: {
     fontSize: 18,
     color: "white",
     fontWeight: "300",
@@ -157,7 +160,7 @@ const styles = StyleSheet.create({
     color: Colors.purple300,
     paddingHorizontal: 12,
     paddingVertical: 4,
-    borderRadius: 12
+    borderRadius: 12,
   },
 });
 
