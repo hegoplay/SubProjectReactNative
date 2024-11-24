@@ -2,20 +2,23 @@ import React from "react";
 import { Image, StyleSheet, Text, View } from "react-native";
 import Status from "../constants/Status";
 // how to fix this
-const statusColor = { online: "green", disable: "gray", current: "blue" };
+const statusColorList = { online: "green", disable: "gray", current: "orange" };
 
-const UserStatus = ({ size = 30, imgSource, status }) => {
+const UserStatus = ({ size = 100, imgSource, status }) => {
   const statusSize = size / 8;
 
-  const statusColor = statusColor[status] ?? "gray";
+  const statusColor = statusColorList[status] ?? "gray";
 
   return (
     <View>
-      <Image source={imgSource} style={{ width: size, height: size }} />
+      <Image
+        source={{uri: imgSource}}
+        style={{ width: size, height: size, borderRadius: "50%" }}
+      />
       <View
         style={{
           position: "absolute",
-          padding: 12,
+          padding: statusSize,
           backgroundColor: statusColor,
           borderRadius: "50%",
           bottom: 5,

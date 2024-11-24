@@ -51,7 +51,7 @@ const Card = ({
         style={[styles.container, isFirst && animatedCardStyle]}
         {...rest}
       >
-        <Image source={image} style={styles.image} />
+        <Image source={{uri:image}} style={styles.image} />
         <LinearGradient
           colors={["transparent", "rgba(0,0,0,.9)"]}
           style={styles.gradient}

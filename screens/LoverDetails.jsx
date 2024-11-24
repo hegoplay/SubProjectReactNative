@@ -14,6 +14,8 @@ import { Ionicons } from "@expo/vector-icons";
 import Colors from "../constants/Colors";
 import { TouchableOpacity } from "react-native";
 import SwipedModal from "../components/SwipedModal";
+import { getUser } from "../connection/UserConnection";
+import { createChat } from "../connection/ChatListConnection";
 
 const { width, height } = Dimensions.get("window");
 
@@ -25,8 +27,14 @@ const LoverDetailScreen = ({ route, navigation }) => {
   const [user, setUser] = useState(null);
   const [isShow, setIsShow] = useState(false);
 
+  
+  const findUser = async (userId) =>{
+    const user = await getUser(userId);
+    setUser(user);
+  }
+
   useLayoutEffect(() => {
-    setUser(usersArray.filter((x) => x.id == userId)[0] ?? null);
+    findUser(userId);
   }, [userId]);
 
   if (user == null) {
@@ -39,7 +47,7 @@ const LoverDetailScreen = ({ route, navigation }) => {
       <ScrollView style={styles.container}>
         <View style={{ marginBottom: 24 }}>
           <View style={{ borderRadius: 4 }}>
-            <Image source={user.image} style={styles.mainImage} />
+            <Image source={{uri: user.image}} style={styles.mainImage} />
           </View>
           <LinearGradient
             colors={["transparent", "rgba(0,0,0,.4)"]}
@@ -137,11 +145,11 @@ const LoverDetailScreen = ({ route, navigation }) => {
           >
             <Image
               style={{ height: width / 2, width: "48%" }}
-              source={{ uri: user.subImage[0] }}
+              source={{ uri: user.subImage[1] }}
             />
             <Image
               style={{ height: width / 2, width: "48%" }}
-              source={{ uri: user.subImage[0] }}
+              source={{ uri: user.subImage[2] }}
             />
           </View>
         </View>
@@ -171,6 +179,7 @@ const LoverDetailScreen = ({ route, navigation }) => {
                 backgroundColor: Colors.green100,
               }}
               onPress={() => {
+                createChat(userId);
                 setIsShow(true);
               }}
             >

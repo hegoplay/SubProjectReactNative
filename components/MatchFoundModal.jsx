@@ -2,24 +2,36 @@ import { Ionicons } from "@expo/vector-icons";
 import React, { useEffect, useLayoutEffect, useState } from "react";
 import { Image, Pressable, TouchableOpacity } from "react-native";
 import { StyleSheet, Text, View } from "react-native";
-import {users as usersArray} from '../utils/data'
+import { users as usersArray } from "../utils/data";
 import Colors from "../constants/Colors";
+import { getUser } from "../connection/UserConnection";
 
 const iconSize = 24;
 
 const MatchFoundModal = ({ navigation, route }) => {
   const [user, setUser] = useState(null);
-  const userId = route.params.userId ?? null;
+  // const userId = route.params.userId ?? null;
+
+  const findUser = async (userId) => {
+    const user = await getUser(route.params.userId ?? null);
+    console.log(userId)
+    setUser(user);
+  };
+  const navigateToChat = () => {
+    navigation.navigate("InChat", { _id: user._id });
+  };
 
   useLayoutEffect(() => {
-    setUser(usersArray.filter((x) => x.id == userId)[0] ?? null);
-  }, [userId]);
+    findUser();
+  }, [route]);
 
-    if (user==null){
-        return <View>
-            <Text>Loading....</Text>
-        </View>
-    }
+  if (user == null) {
+    return (
+      <View>
+        <Text>Loading....</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -61,7 +73,7 @@ const MatchFoundModal = ({ navigation, route }) => {
           message. Don't wait too long!
         </Text>
       </View>
-      <Pressable style={styles.footerContainer}>
+      <Pressable style={styles.footerContainer} onPress={navigateToChat}>
         <Ionicons name="flashlight-outline" size={16} color={Colors.cyan500} />
         <Text style={{ flex: 1, fontSize: 16, color: Colors.cyan500 }}>
           Type a message...

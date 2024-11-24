@@ -60,9 +60,8 @@ const SwipedModal = ({ visible, setVisible = () => {}, userId  = 1}) => {
               style={{ flex: 1, width: "50%" }}
               onPress={() => {
                 setVisible(false);
-                // console.log(visible)
+                // console.log(userId)
                 navigation.navigate("MatchFound",{userId: userId})
-                navigat
               }}
             >
               Continue

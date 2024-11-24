@@ -7,6 +7,7 @@ import Colors from "../constants/Colors";
 import { useContext, useLayoutEffect, useReducer, useState } from "react";
 import { FilterContext } from "../utils/stores/FilterContext";
 import { Ionicons } from "@expo/vector-icons";
+import Slider from "@react-native-community/slider";
 // import Slider from "@react-native-community/slider";
 
 const typeList = {
@@ -57,6 +58,16 @@ const FilterScreen = ({ navigation }) => {
     dispatch({ type: "reset", payload: filterContext.data });
     setIsLoad(true);
   }, []);
+
+  const applyFilter = async () => {
+    filterContext.setMaxDistance(curData.maxDistance);
+    filterContext.getPendingUsers(curData);
+  };
+
+  const resetData = () => {
+    dispatch({ type: "reset", payload: filterContext.data });
+    
+  };
 
   const clickSize = 24;
   if (!isLoad)
@@ -118,8 +129,8 @@ const FilterScreen = ({ navigation }) => {
               <Text>{curData.maxDistance} km</Text>
               <Text>80 km</Text>
             </View>
-            {/* <Slider
-              minimumValue={0}
+            <Slider
+              minimumValuealue={0}
               maximumValue={80}
               value={curData.maxDistance}
               onValueChange={
@@ -138,7 +149,7 @@ const FilterScreen = ({ navigation }) => {
 
               // thumbStyle={{height: 15, width: 15, backgroundColor: Colors.cyan300}}
               // StepMarker={1}
-            /> */}
+            />
           </View>
         </View>
         {/* Languages */}
@@ -153,6 +164,10 @@ const FilterScreen = ({ navigation }) => {
           color="gray"
           fontSize={16}
           style={{ flex: 1, borderRadius: 4 }}
+          onPress={() => {
+            resetData();
+            // console.log("Reset");
+          }}
         >
           Clear all
         </CustomButtonNonIcon>
@@ -161,6 +176,11 @@ const FilterScreen = ({ navigation }) => {
           color="white"
           fontSize={16}
           style={{ flex: 1, borderRadius: 8 }}
+          onPress={() => {
+            applyFilter();
+            // console.log("Apply");
+            navigation.navigate("FindYourLove");
+          }}
         >
           Apply filters
         </CustomButtonNonIcon>

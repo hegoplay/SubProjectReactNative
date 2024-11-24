@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Dimensions, Modal, PanResponder, Text } from "react-native";
 import {
   Animated,
@@ -10,12 +10,16 @@ import { users as usersArray } from "../utils/data";
 import Card from "../components/Card";
 import { Ionicons } from "@expo/vector-icons";
 import SwipedModal from "../components/SwipedModal";
+import { getUsersPending } from "../connection/UserConnection";
+import { createChat } from "../connection/ChatListConnection";
+import { FilterContext } from "../utils/stores/FilterContext";
 
 const { width, height } = Dimensions.get("window");
-
 export default FindYourLoveScreen = ({ navigation }) => {
+
   // Use useRef for Animated.Value
-  const [users, setUsers] = useState(usersArray ?? []);
+  const [users, setUsers] = useState([]);
+  const filterContext = useContext(FilterContext);
   const [showIntroScreen, setShowIntroScreen] = useState(true);
   const [openModal, setOpenModal] = useState(false);
   const [prevUserId, setPrevUserId] = useState(1);
@@ -26,12 +30,13 @@ export default FindYourLoveScreen = ({ navigation }) => {
   const titlSign = useRef(new Animated.Value(1)).current;
 
   const removeTopCard = (direction) => {
-    setUsers((prevState) => prevState.slice(1));
-    swipe.setValue({ x: 0, y: 0 });
     // console.log(direction)
     if (direction > 0) {
       setOpenModal(true);
+      createChat(users[0]._id);
     }
+    setUsers((prevState) => prevState.slice(1));
+    swipe.setValue({ x: 0, y: 0 });
   };
 
   const removeIntro = () => {
@@ -57,9 +62,9 @@ export default FindYourLoveScreen = ({ navigation }) => {
         Math.abs(vx) < 0.1 &&
         Math.abs(vy) < 0.1;
       if (isJustTouch) {
-        // console.log("User Id first: {}",users[0].id );
         navigation.navigate("LoverDetail", {
-          userId: users[0].id,
+        // console.log("User Id first: {}",users[0].id );
+          userId: users[0]._id,
           isSelecting: true,
         });
         return;
@@ -74,7 +79,7 @@ export default FindYourLoveScreen = ({ navigation }) => {
           },
           useNativeDriver: true,
         }).start(() => {
-          setPrevUserId(users[0].id)
+          setPrevUserId(users[0]._id)
           removeTopCard(direction);
         });
       } else {
@@ -90,11 +95,41 @@ export default FindYourLoveScreen = ({ navigation }) => {
       }
     },
   });
+
+  const setPendingUsers = async () => {
+    const users = await getUsersPending();
+    setUsers(users);
+  };
+
+
+
   useEffect(() => {
     if (!users.length) {
-      setUsers(users);
+      if (filterContext.users.length == 0) {
+        alert("No users found");
+      }
+      setPendingUsers();
     }
   }, [users.length]);
+
+  useLayoutEffect(() => {
+    setUsers(filterContext.users);
+  }, [filterContext.users]);
+
+
+
+  if (users.length == 0) {
+    return (
+      <View>
+        <SwipedModal
+        visible={openModal}
+        setVisible={setOpenModal}
+        userId={prevUserId}
+      />
+        <Text>Loading...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>

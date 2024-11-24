@@ -1,4 +1,5 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer, useState } from "react";
+import { getUsersPending } from "../../connection/UserConnection";
 
 export const FilterContext = createContext({
     data:{
@@ -8,11 +9,13 @@ export const FilterContext = createContext({
         maxDistance: 0,
         languages: []
     },
+    users: [],
     setGender: (genders) =>{},
     setMinAge: (age) =>{},
     setMaxAge: (age) =>{},
     setMaxDistance: (distance) => {},
     setLanguages: (languages) =>{},
+    getPendingUsers: async () => {},
 })
 
 const typeList = {
@@ -48,7 +51,14 @@ export const FilterProvider = ({children})=>{
         maxAge: 80,
         maxDistance: 10,
         languages: [],
-    })
+    });
+
+    const [users, setUsers] = useState([]);
+
+    const getPendingUsers = async (filter) => {
+        const users = await getUsersPending(filter);
+        setUsers(users);
+    }
 
     const setGender = (genders) =>{
         dispatch({type: typeList.gender, payload: genders});
@@ -69,11 +79,13 @@ export const FilterProvider = ({children})=>{
 
     return <FilterContext.Provider value={{
         data: filter,
+        users,
         setGender,
         setMinAge,
         setMaxAge,
         setMaxDistance,
-        setLanguages
+        setLanguages,
+        getPendingUsers,
     }}>
         {children}
     </FilterContext.Provider>

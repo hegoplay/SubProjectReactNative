@@ -18,6 +18,7 @@ import FindYourLoveScreen from "./screens/FindYourLoveScreen.jsx";
 import { TouchableOpacity } from "react-native";
 import LoverDetailScreen from "./screens/LoverDetails.jsx";
 import MatchFoundModal from "./components/MatchFoundModal.jsx";
+import InChatScreen from "./screens/messages/InChatScreen.jsx";
 
 export default function App() {
   const Stack = createNativeStackNavigator();
@@ -89,8 +90,9 @@ export default function App() {
   };
   const messageDrawers = () =>{
     return(
-      <MessageDrawer.Navigator screenOptions={{headerShown: false}}>
+      <MessageDrawer.Navigator initialRouteName="MainChat" screenOptions={{headerShown: false}}>
         <MessageDrawer.Screen name = "MainChat" component={MainChatScreen}/>
+        <MessageDrawer.Screen name = "InChat" component={InChatScreen}/>
       </MessageDrawer.Navigator>
     )
   }
